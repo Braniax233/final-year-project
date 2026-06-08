@@ -1,0 +1,305 @@
+/**
+ * mockData.js
+ * Realistic demo data used when DEV_MODE = true.
+ * Mirrors the exact shape of every API response the backend returns.
+ */
+
+export const MOCK_USERS = {
+  clinician: {
+    id: 'u001',
+    name: 'Dr. Abena Mensah',
+    email: 'clinician@vitalx.com',
+    role: 'clinician',
+    phone: '+233201234567',
+    department: 'Internal Medicine',
+    patientId: null,
+    isActive: true,
+  },
+  provider: {
+    id: 'u002',
+    name: 'Nurse Akosua Frempong',
+    email: 'provider@vitalx.com',
+    role: 'provider',
+    phone: '+233209876543',
+    department: 'General Ward',
+    patientId: null,
+    isActive: true,
+  },
+  patient: {
+    id: 'u003',
+    name: 'Kwame Asante',
+    email: 'patient@vitalx.com',
+    role: 'patient',
+    phone: '+233241234567',
+    department: '',
+    patientId: 'p001',
+    isActive: true,
+  },
+};
+
+const now = Date.now();
+const h = (hours) => new Date(now - hours * 3600000).toISOString();
+
+export const MOCK_PATIENTS = [
+  {
+    _id: 'p001',
+    membershipId: 'GH-2025-001',
+    barcode: '0001',
+    name: 'Kwame Asante',
+    dob: '1965-03-12',
+    gender: 'Male',
+    bloodGroup: 'O+',
+    address: 'Accra, Ghana',
+    primaryCondition: 'COPD',
+    allergies: 'Penicillin',
+    medications: 'Salbutamol, Ipratropium',
+    isActive: true,
+    bmi: { weight: 82, height: 175, value: 26.8, classification: 'Overweight' },
+    threshold: { spo2Min: 93, spo2Max: 100, hrMin: 55, hrMax: 100, warningMargin: 2, trendWindow: 5 },
+    emergencyContacts: [{ name: 'Ama Asante', relationship: 'Spouse', phone: '+233241234567' }],
+    locationSharingConsent: true,
+    latestReading: { spo2: 92, heartRate: 88, status: 'CRITICAL', timestamp: h(1) },
+  },
+  {
+    _id: 'p002',
+    membershipId: 'GH-2025-002',
+    barcode: '0002',
+    name: 'Abena K. Owusu',
+    dob: '1979-07-22',
+    gender: 'Female',
+    bloodGroup: 'A+',
+    address: 'Kumasi, Ghana',
+    primaryCondition: 'Hypertension',
+    allergies: 'None',
+    medications: 'Amlodipine 5mg',
+    isActive: true,
+    bmi: { weight: 65, height: 162, value: 24.8, classification: 'Normal' },
+    threshold: { spo2Min: 95, spo2Max: 100, hrMin: 60, hrMax: 100, warningMargin: 2, trendWindow: 5 },
+    emergencyContacts: [{ name: 'Kofi Owusu', relationship: 'Husband', phone: '+233557654321' }],
+    locationSharingConsent: true,
+    latestReading: { spo2: 96, heartRate: 99, status: 'WARNING', timestamp: h(2) },
+  },
+  {
+    _id: 'p003',
+    membershipId: 'GH-2025-003',
+    barcode: '0003',
+    name: 'Emmanuel Tetteh',
+    dob: '1990-01-05',
+    gender: 'Male',
+    bloodGroup: 'B+',
+    address: 'Tamale, Ghana',
+    primaryCondition: 'Asthma',
+    allergies: 'Aspirin',
+    medications: 'Budesonide inhaler',
+    isActive: true,
+    bmi: { weight: 90, height: 180, value: 27.8, classification: 'Overweight' },
+    threshold: { spo2Min: 94, spo2Max: 100, hrMin: 60, hrMax: 105, warningMargin: 2, trendWindow: 5 },
+    emergencyContacts: [{ name: 'Gloria Tetteh', relationship: 'Mother', phone: '+233248765432' }],
+    locationSharingConsent: false,
+    latestReading: { spo2: 96, heartRate: 71, status: 'NORMAL', timestamp: h(3) },
+  },
+  {
+    _id: 'p004',
+    membershipId: 'GH-2025-004',
+    barcode: '0004',
+    name: 'Akosua Adjei',
+    dob: '1987-11-30',
+    gender: 'Female',
+    bloodGroup: 'AB+',
+    address: 'Cape Coast, Ghana',
+    primaryCondition: 'Diabetes Type 2',
+    allergies: 'Sulfa drugs',
+    medications: 'Metformin 500mg',
+    isActive: true,
+    bmi: { weight: 74, height: 168, value: 26.2, classification: 'Overweight' },
+    threshold: { spo2Min: 94, spo2Max: 100, hrMin: 60, hrMax: 100, warningMargin: 2, trendWindow: 5 },
+    emergencyContacts: [{ name: 'Kojo Adjei', relationship: 'Brother', phone: '+233244567890' }],
+    locationSharingConsent: true,
+    latestReading: { spo2: 97, heartRate: 68, status: 'NORMAL', timestamp: h(4) },
+  },
+  {
+    _id: 'p005',
+    membershipId: 'GH-2025-005',
+    barcode: '0005',
+    name: 'Robert J. Mensah',
+    dob: '1967-05-18',
+    gender: 'Male',
+    bloodGroup: 'B-',
+    address: 'Tema, Ghana',
+    primaryCondition: 'Heart Failure',
+    allergies: 'Ibuprofen',
+    medications: 'Furosemide, Carvedilol',
+    isActive: true,
+    bmi: { weight: 78, height: 173, value: 26.1, classification: 'Overweight' },
+    threshold: { spo2Min: 94, spo2Max: 100, hrMin: 55, hrMax: 95, warningMargin: 2, trendWindow: 5 },
+    emergencyContacts: [{ name: 'Mary Mensah', relationship: 'Spouse', phone: '+233206543210' }],
+    locationSharingConsent: true,
+    latestReading: { spo2: 98, heartRate: 72, status: 'NORMAL', timestamp: h(2) },
+  },
+];
+
+export const MOCK_READINGS = {
+  p001: [
+    { _id: 'r001', spo2: 96, heartRate: 72, status: 'NORMAL',   trendDirection: 'stable',   timestamp: h(24), captureContext: 'clinical' },
+    { _id: 'r002', spo2: 95, heartRate: 74, status: 'NORMAL',   trendDirection: 'stable',   timestamp: h(18), captureContext: 'clinical' },
+    { _id: 'r003', spo2: 94.5, heartRate: 76, status: 'WARNING', trendDirection: 'declining', timestamp: h(12), captureContext: 'clinical' },
+    { _id: 'r004', spo2: 94,   heartRate: 78, status: 'WARNING', trendDirection: 'declining', timestamp: h(6),  captureContext: 'clinical' },
+    { _id: 'r005', spo2: 92,   heartRate: 88, status: 'CRITICAL', trendDirection: 'declining', timestamp: h(1),  captureContext: 'clinical' },
+  ],
+  p002: [
+    { _id: 'r006', spo2: 98, heartRate: 75,  status: 'NORMAL',   trendDirection: 'stable',   timestamp: h(20), captureContext: 'clinical' },
+    { _id: 'r007', spo2: 97, heartRate: 85,  status: 'NORMAL',   trendDirection: 'stable',   timestamp: h(15), captureContext: 'clinical' },
+    { _id: 'r008', spo2: 97, heartRate: 98,  status: 'WARNING',  trendDirection: 'stable',   timestamp: h(10), captureContext: 'clinical' },
+    { _id: 'r009', spo2: 96, heartRate: 101, status: 'CRITICAL', trendDirection: 'stable',   timestamp: h(5),  captureContext: 'clinical' },
+    { _id: 'r010', spo2: 96, heartRate: 99,  status: 'WARNING',  trendDirection: 'improving', timestamp: h(2),  captureContext: 'clinical' },
+  ],
+  p003: [
+    { _id: 'r011', spo2: 97, heartRate: 68, status: 'NORMAL', trendDirection: 'stable',    timestamp: h(48), captureContext: 'home' },
+    { _id: 'r012', spo2: 97, heartRate: 70, status: 'NORMAL', trendDirection: 'stable',    timestamp: h(36), captureContext: 'home' },
+    { _id: 'r013', spo2: 96, heartRate: 72, status: 'NORMAL', trendDirection: 'stable',    timestamp: h(24), captureContext: 'home' },
+    { _id: 'r014', spo2: 95, heartRate: 75, status: 'NORMAL', trendDirection: 'stable',    timestamp: h(12), captureContext: 'home' },
+    { _id: 'r015', spo2: 96, heartRate: 71, status: 'NORMAL', trendDirection: 'improving', timestamp: h(3),  captureContext: 'home' },
+  ],
+  p004: [
+    { _id: 'r016', spo2: 98, heartRate: 66, status: 'NORMAL', trendDirection: 'stable', timestamp: h(36), captureContext: 'home' },
+    { _id: 'r017', spo2: 97, heartRate: 68, status: 'NORMAL', trendDirection: 'stable', timestamp: h(24), captureContext: 'home' },
+    { _id: 'r018', spo2: 97, heartRate: 67, status: 'NORMAL', trendDirection: 'stable', timestamp: h(12), captureContext: 'home' },
+    { _id: 'r019', spo2: 97, heartRate: 69, status: 'NORMAL', trendDirection: 'stable', timestamp: h(6),  captureContext: 'home' },
+    { _id: 'r020', spo2: 97, heartRate: 68, status: 'NORMAL', trendDirection: 'stable', timestamp: h(4),  captureContext: 'home' },
+  ],
+  p005: [
+    { _id: 'r021', spo2: 97, heartRate: 74, status: 'NORMAL', trendDirection: 'stable', timestamp: h(20), captureContext: 'clinical' },
+    { _id: 'r022', spo2: 98, heartRate: 71, status: 'NORMAL', trendDirection: 'stable', timestamp: h(14), captureContext: 'clinical' },
+    { _id: 'r023', spo2: 98, heartRate: 73, status: 'NORMAL', trendDirection: 'stable', timestamp: h(8),  captureContext: 'clinical' },
+    { _id: 'r024', spo2: 97, heartRate: 72, status: 'NORMAL', trendDirection: 'stable', timestamp: h(4),  captureContext: 'clinical' },
+    { _id: 'r025', spo2: 98, heartRate: 72, status: 'NORMAL', trendDirection: 'stable', timestamp: h(2),  captureContext: 'clinical' },
+  ],
+};
+
+export const MOCK_ALERTS = [
+  {
+    _id: 'a001',
+    patientId: 'p001',
+    patientName: 'Kwame Asante',
+    membershipId: 'GH-2025-001',
+    readingId: 'r005',
+    severity: 'CRITICAL',
+    message: 'SpO₂ critically low at 92% — COPD patient',
+    spo2: 92,
+    heartRate: 88,
+    smsDelivered: true,
+    smsSentTo: ['+233201234567', '+233241234567'],
+    gpsCoordinates: { lat: 5.6037, lng: -0.187 },
+    resolvedAt: null,
+    resolvedBy: null,
+    timestamp: h(1),
+  },
+  {
+    _id: 'a002',
+    patientId: 'p002',
+    patientName: 'Abena K. Owusu',
+    membershipId: 'GH-2025-002',
+    readingId: 'r009',
+    severity: 'CRITICAL',
+    message: 'Heart rate critically elevated at 101 bpm',
+    spo2: 96,
+    heartRate: 101,
+    smsDelivered: true,
+    smsSentTo: ['+233201234567', '+233557654321'],
+    gpsCoordinates: { lat: 6.6885, lng: -1.6244 },
+    resolvedAt: null,
+    resolvedBy: null,
+    timestamp: h(5),
+  },
+  {
+    _id: 'a003',
+    patientId: 'p002',
+    patientName: 'Abena K. Owusu',
+    membershipId: 'GH-2025-002',
+    readingId: 'r008',
+    severity: 'WARNING',
+    message: 'Heart rate approaching threshold at 98 bpm',
+    spo2: 97,
+    heartRate: 98,
+    smsDelivered: false,
+    smsSentTo: [],
+    gpsCoordinates: null,
+    resolvedAt: new Date().toISOString(),
+    resolvedBy: 'u001',
+    timestamp: h(10),
+  },
+  {
+    _id: 'a004',
+    patientId: 'p001',
+    patientName: 'Kwame Asante',
+    membershipId: 'GH-2025-001',
+    readingId: 'r004',
+    severity: 'WARNING',
+    message: 'SpO₂ declining trend detected — approaching threshold',
+    spo2: 94,
+    heartRate: 78,
+    smsDelivered: false,
+    smsSentTo: [],
+    gpsCoordinates: null,
+    resolvedAt: null,
+    resolvedBy: null,
+    timestamp: h(6),
+  },
+];
+
+export const MOCK_NOTES = {
+  p001: [
+    {
+      _id: 'n001',
+      patientId: 'p001',
+      clinicianId: 'u001',
+      clinicianName: 'Dr. Abena Mensah',
+      readingId: 'r003',
+      note: 'Patient reports shortness of breath in the mornings. SpO₂ consistently 94–95%. Adjusted threshold minimum to 93%. Monitoring closely. Follow-up in 2 weeks.',
+      tags: ['Threshold Change', 'Follow-up Required'],
+      timestamp: h(12),
+    },
+  ],
+  p002: [
+    {
+      _id: 'n002',
+      patientId: 'p002',
+      clinicianId: 'u001',
+      clinicianName: 'Dr. Abena Mensah',
+      readingId: 'r010',
+      note: 'HR elevated during morning session. Patient reports stress and poor sleep. Advised salt restriction and rest. Medication review scheduled.',
+      tags: ['Medication Review', 'Lifestyle Advice'],
+      timestamp: h(2),
+    },
+  ],
+  p003: [],
+  p004: [],
+  p005: [],
+};
+
+export const MOCK_DASHBOARD_STATS = {
+  totalPatients: 5,
+  normalCount: 3,
+  warningCount: 1,
+  criticalCount: 1,
+  onlineDevices: 2,
+};
+
+// Chart data helpers — generate realistic time-series from readings
+export function getChartData(patientId) {
+  const readings = MOCK_READINGS[patientId] || [];
+  return [...readings].reverse().map((r) => ({
+    time: new Date(r.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+    spo2: r.spo2,
+    hr: r.heartRate,
+  }));
+}
+
+export function getLiveOverviewData() {
+  // 24 hourly data points for the dashboard overview chart
+  return Array.from({ length: 13 }, (_, i) => ({
+    time: `${String(i * 2).padStart(2, '0')}:00`,
+    spo2: 94 + Math.random() * 4,
+    hr:   65 + Math.random() * 30,
+  }));
+}
