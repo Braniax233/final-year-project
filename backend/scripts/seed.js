@@ -72,7 +72,7 @@ async function seed() {
       barcode: "0001",
       name: "Kwame Asante",
       dob: new Date("1965-03-12"),
-      gender: "Male",
+      gender: "male",
       bloodGroup: "O+",
       assignedClinicianId: clinician._id,
       bmi: {
@@ -105,7 +105,7 @@ async function seed() {
       barcode: "0002",
       name: "Abena Owusu",
       dob: new Date("1979-07-22"),
-      gender: "Female",
+      gender: "female",
       bloodGroup: "A+",
       assignedClinicianId: clinician._id,
       bmi: { weight: 65, height: 162, value: 24.8, classification: "Normal" },
@@ -133,7 +133,7 @@ async function seed() {
       barcode: "0003",
       name: "Emmanuel Tetteh",
       dob: new Date("1990-01-05"),
-      gender: "Male",
+      gender: "male",
       bloodGroup: "B+",
       assignedClinicianId: clinician._id,
       bmi: {

@@ -11,7 +11,7 @@ import { MOCK_USERS } from "../api/mockData";
 // ── Dev mode switch ────────────────────────────────────────────────────────────
 // Set to true to bypass the backend entirely and use mock data.
 // Set to false when the real backend + database is ready.
-export const DEV_MODE = true;
+export const DEV_MODE = false;
 
 const AuthContext = createContext(null);
 
@@ -68,6 +68,17 @@ export const AuthProvider = ({ children }) => {
     return newUser;
   }, []);
 
+  // ── Register ──────────────────────────────────────────────────────────────
+  const register = useCallback(async (userData) => {
+    const response = await api.post("/auth/register", userData);
+    const { token: newToken, user: newUser } = response.data;
+    setToken(newToken);
+    setUser(newUser);
+    localStorage.setItem("vitalx_token", newToken);
+    localStorage.setItem("vitalx_user", JSON.stringify(newUser));
+    return newUser;
+  }, []);
+
   // ── Logout ────────────────────────────────────────────────────────────────
   const logout = useCallback(() => {
     setToken(null);
@@ -78,7 +89,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login, logout, isAuthenticated: !!token, loading }}
+      value={{
+        user,
+        token,
+        login,
+        register,
+        logout,
+        isAuthenticated: !!token,
+        loading,
+      }}
     >
       {children}
     </AuthContext.Provider>
