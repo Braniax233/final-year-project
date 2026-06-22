@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Users,
@@ -21,6 +21,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import api from "../../api/axios";
+import { getLatestVitals } from "../../api/vitals";
 import StatCard from "../../components/StatCard";
 import StatusBadge from "../../components/StatusBadge";
 import SparklineChart from "../../components/SparklineChart";
@@ -128,6 +129,26 @@ export default function ClinicianDashboard() {
     critical: 0,
     live: 0,
   });
+
+  // Live ESP8266 sensor state
+  const [liveVitals, setLiveVitals] = useState(null);
+  const [sensorOnline, setSensorOnline] = useState(false);
+  const pollRef = useRef(null);
+
+  useEffect(() => {
+    const poll = async () => {
+      try {
+        const data = await getLatestVitals();
+        setLiveVitals(data);
+        setSensorOnline(true);
+      } catch {
+        setSensorOnline(false);
+      }
+    };
+    poll();
+    pollRef.current = setInterval(poll, 5000);
+    return () => clearInterval(pollRef.current);
+  }, []);
 
   useEffect(() => {
     if (DEV_MODE) {
@@ -451,6 +472,72 @@ export default function ClinicianDashboard() {
 
         {/* ── Right column ────────────────────────────────────────────────────── */}
         <div className="space-y-6">
+          {/* ESP8266 Live Sensor Feed */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`p-1.5 rounded-lg ${
+                    sensorOnline ? "bg-green-100" : "bg-gray-100"
+                  }`}
+                >
+                  {sensorOnline ? (
+                    <Wifi size={14} className="text-green-600" />
+                  ) : (
+                    <WifiOff size={14} className="text-gray-400" />
+                  )}
+                </div>
+                <h2 className="text-base font-semibold text-gray-800">
+                  Live Sensor
+                </h2>
+              </div>
+              <span
+                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                  sensorOnline
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                {sensorOnline ? "● Online" : "○ Offline"}
+              </span>
+            </div>
+
+            {liveVitals ? (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="text-center p-3 bg-red-50 rounded-xl border border-red-100">
+                  <p className="text-xs text-gray-500 mb-1">
+                    <Heart
+                      size={11}
+                      className="text-red-500 inline-block mr-1"
+                    />
+                    Heart Rate
+                  </p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {liveVitals.heartRate}
+                  </p>
+                  <p className="text-xs text-gray-500">bpm</p>
+                </div>
+                <div className="text-center p-3 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-xs text-gray-500 mb-1">
+                    <Monitor
+                      size={11}
+                      className="text-brand inline-block mr-1"
+                    />
+                    SpO2
+                  </p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {liveVitals.spo2}
+                  </p>
+                  <p className="text-xs text-gray-500">%</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 text-center py-3">
+                No active sensor reading
+              </p>
+            )}
+          </div>
+
           {/* Recent Alerts */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">

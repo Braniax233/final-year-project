@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Heart,
   Activity,
@@ -8,6 +8,8 @@ import {
   Calculator,
   TrendingUp,
   TrendingDown,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import {
   LineChart,
@@ -19,6 +21,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import api from "../../api/axios";
+import { getLatestVitals } from "../../api/vitals";
 import StatusBadge from "../../components/StatusBadge";
 import SparklineChart from "../../components/SparklineChart";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -116,6 +119,11 @@ export default function PatientDashboard() {
     DEV_MODE ? [] : generateHistory(),
   );
 
+  // Live sensor state — polls /api/vitals/latest every 5 seconds
+  const [liveVitals, setLiveVitals] = useState(null);
+  const [sensorOnline, setSensorOnline] = useState(false);
+  const pollRef = useRef(null);
+
   // BMI calculator state
   const [bmiWeight, setBmiWeight] = useState("");
   const [bmiHeight, setBmiHeight] = useState("");
@@ -124,6 +132,23 @@ export default function PatientDashboard() {
   // Location sharing
   const [locConsent, setLocConsent] = useState(false);
   const [savingLoc, setSavingLoc] = useState(false);
+
+  // Start polling the live sensor endpoint
+  useEffect(() => {
+    const poll = async () => {
+      try {
+        const data = await getLatestVitals();
+        setLiveVitals(data);
+        setSensorOnline(true);
+      } catch {
+        setSensorOnline(false);
+      }
+    };
+
+    poll(); // immediate first fetch
+    pollRef.current = setInterval(poll, 5000);
+    return () => clearInterval(pollRef.current);
+  }, []);
 
   useEffect(() => {
     if (DEV_MODE) {
@@ -252,6 +277,66 @@ export default function PatientDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ── Main column ──────────────────────────────────────────────────────── */}
         <div className="lg:col-span-2 space-y-6">
+          {/* ── Live Sensor Card ──────────────────────────────────────────── */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`p-1.5 rounded-lg ${
+                    sensorOnline ? "bg-green-100" : "bg-gray-100"
+                  }`}
+                >
+                  {sensorOnline ? (
+                    <Wifi size={14} className="text-green-600" />
+                  ) : (
+                    <WifiOff size={14} className="text-gray-400" />
+                  )}
+                </div>
+                <h3 className="text-sm font-semibold text-gray-800">
+                  Live Sensor
+                </h3>
+              </div>
+              <span
+                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                  sensorOnline
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                {sensorOnline ? "● Online" : "○ Offline"}
+              </span>
+            </div>
+
+            {liveVitals ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-red-50 rounded-xl border border-red-100">
+                  <p className="text-xs text-gray-500 mb-1 flex items-center justify-center gap-1">
+                    <Heart size={11} className="text-red-500" /> Heart Rate
+                  </p>
+                  <p className="text-3xl font-bold text-gray-800">
+                    {liveVitals.heartRate}
+                  </p>
+                  <p className="text-xs text-gray-500">bpm</p>
+                </div>
+                <div className="text-center p-3 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-xs text-gray-500 mb-1 flex items-center justify-center gap-1">
+                    <Activity size={11} className="text-brand" /> SpO2
+                  </p>
+                  <p className="text-3xl font-bold text-gray-800">
+                    {liveVitals.spo2}
+                  </p>
+                  <p className="text-xs text-gray-500">%</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 text-center py-4">
+                {sensorOnline
+                  ? "Waiting for sensor data…"
+                  : "Place your finger on the sensor to begin."}
+              </p>
+            )}
+          </div>
+
           {/* Vital cards */}
           <div className="grid grid-cols-2 gap-4">
             {/* SpO2 */}
