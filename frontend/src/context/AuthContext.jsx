@@ -1,90 +1,47 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-} from "react";
-import api from "../api/axios";
-import { MOCK_USERS } from "../api/mockData";
+/**
+ * context/AuthContext.jsx
+ * Authentication context — login DISABLED for main-feature demo.
+ *
+ * A default clinician user is injected on mount so every page that
+ * calls useAuth() receives a valid user object without requiring login.
+ *
+ * Re-enable real auth later by restoring the API-based login/register flow.
+ */
 
-// ── Dev mode switch ────────────────────────────────────────────────────────────
-// Set to true to bypass the backend entirely and use mock data.
-// Set to false when the real backend + database is ready.
+import { createContext, useState, useContext, useCallback } from "react";
+
+// ── Dev mode — set false to hit the real backend API ──────────────────────────
 export const DEV_MODE = false;
+
+// ── Default user injected when auth is disabled ────────────────────────────────
+const DEFAULT_USER = {
+  _id: "000000000000000000000000",
+  name: "Demo Clinician",
+  email: "demo@vitalx.com",
+  role: "clinician",
+  isActive: true,
+};
+
+const DEFAULT_TOKEN = "demo_token_no_auth";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(DEFAULT_USER);
+  const [token, setToken] = useState(DEFAULT_TOKEN);
 
-  // ── Restore session on mount ──────────────────────────────────────────────
-  useEffect(() => {
-    try {
-      const storedToken = localStorage.getItem("vitalx_token");
-      const storedUser = localStorage.getItem("vitalx_user");
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (_) {
-      localStorage.removeItem("vitalx_token");
-      localStorage.removeItem("vitalx_user");
-    } finally {
-      setLoading(false);
-    }
+  // login / logout / register are kept so existing call-sites don't break
+  const login = useCallback(async (_email, _password) => {
+    // Auth disabled — just return the default user
+    return DEFAULT_USER;
   }, []);
 
-  // ── Login ─────────────────────────────────────────────────────────────────
-  const login = useCallback(async (email, password) => {
-    if (DEV_MODE) {
-      // Match email to a mock user role — password is always accepted
-      let mockUser = null;
-      if (email.includes("clinician")) mockUser = MOCK_USERS.clinician;
-      else if (email.includes("provider")) mockUser = MOCK_USERS.provider;
-      else if (email.includes("patient")) mockUser = MOCK_USERS.patient;
-      else {
-        // Default: any unknown email → clinician (so you can type anything)
-        mockUser = { ...MOCK_USERS.clinician, email, name: "Demo Clinician" };
-      }
-
-      const fakeToken = "dev_mock_token_" + mockUser.role;
-      setToken(fakeToken);
-      setUser(mockUser);
-      localStorage.setItem("vitalx_token", fakeToken);
-      localStorage.setItem("vitalx_user", JSON.stringify(mockUser));
-      return mockUser;
-    }
-
-    // Real API call (used when DEV_MODE = false)
-    const response = await api.post("/auth/login", { email, password });
-    const { token: newToken, user: newUser } = response.data;
-    setToken(newToken);
-    setUser(newUser);
-    localStorage.setItem("vitalx_token", newToken);
-    localStorage.setItem("vitalx_user", JSON.stringify(newUser));
-    return newUser;
+  const register = useCallback(async (_userData) => {
+    return DEFAULT_USER;
   }, []);
 
-  // ── Register ──────────────────────────────────────────────────────────────
-  const register = useCallback(async (userData) => {
-    const response = await api.post("/auth/register", userData);
-    const { token: newToken, user: newUser } = response.data;
-    setToken(newToken);
-    setUser(newUser);
-    localStorage.setItem("vitalx_token", newToken);
-    localStorage.setItem("vitalx_user", JSON.stringify(newUser));
-    return newUser;
-  }, []);
-
-  // ── Logout ────────────────────────────────────────────────────────────────
   const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem("vitalx_token");
-    localStorage.removeItem("vitalx_user");
+    // No-op while auth is disabled
   }, []);
 
   return (
@@ -95,8 +52,8 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
-        isAuthenticated: !!token,
-        loading,
+        isAuthenticated: true,
+        loading: false,
       }}
     >
       {children}

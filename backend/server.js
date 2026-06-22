@@ -8,6 +8,10 @@
 const dotenv = require("dotenv");
 dotenv.config(); // Load .env before any other module reads process.env
 
+// Force Google public DNS so MongoDB Atlas SRV records resolve correctly
+// on machines whose local DNS server does not support SRV lookups.
+require("dns").setServers(["8.8.8.8", "8.8.4.4"]);
+
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");

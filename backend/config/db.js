@@ -4,7 +4,7 @@
  * Establishes a connection to MongoDB and logs the outcome.
  */
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * connectDB — attempts to connect to MongoDB using MONGO_URI from environment.
@@ -21,20 +21,23 @@ const connectDB = async () => {
     console.log(`✅  MongoDB connected: ${conn.connection.host}`);
 
     // Mongoose connection event listeners for runtime issues
-    mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️   MongoDB disconnected. Attempting to reconnect…');
+    mongoose.connection.on("disconnected", () => {
+      console.warn("⚠️   MongoDB disconnected. Attempting to reconnect…");
     });
 
-    mongoose.connection.on('reconnected', () => {
-      console.log('✅  MongoDB reconnected.');
+    mongoose.connection.on("reconnected", () => {
+      console.log("✅  MongoDB reconnected.");
     });
 
-    mongoose.connection.on('error', (err) => {
-      console.error('❌  MongoDB runtime error:', err.message);
+    mongoose.connection.on("error", (err) => {
+      console.error("❌  MongoDB runtime error:", err.message);
     });
   } catch (err) {
     console.error(`❌  MongoDB connection failed: ${err.message}`);
-    process.exit(1);
+    console.warn(
+      "⚠️   Running without MongoDB — fix Atlas IP whitelist or resume the cluster.",
+    );
+    // Don't exit: Firebase/vitals routes work without MongoDB
   }
 };
 
